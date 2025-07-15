@@ -1,5 +1,7 @@
 import { useRouter } from "expo-router";
-import React from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import React, { useState } from "react";
 import {
   Image,
   Pressable,
@@ -9,9 +11,36 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { auth, db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
 export default function signUp() {
   const router = useRouter();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const CreateNewAcccount = async () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async (resp) => {
+        const user = resp.user;
+        console.log(user);
+        await SaveUser(user);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const SaveUser = async (user) => {
+    await setDoc(doc(db, "users", email), {
+      name: fullName,
+      email: email,
+      member: false,
+      uid: user?.uid,
+    });
+//navigate to new screen
+
+  };
   return (
     <View
       style={{
@@ -39,14 +68,24 @@ export default function signUp() {
       >
         Create New Account
       </Text>
-      <TextInput placeholder="Full Name" style={styles.textInput} />
-      <TextInput placeholder="Email" style={styles.textInput} />
+      <TextInput
+        placeholder="Full Name"
+        onChangeText={setFullName}
+        style={styles.textInput}
+      />
+      <TextInput
+        placeholder="Email"
+        onChangeText={setEmail}
+        style={styles.textInput}
+      />
       <TextInput
         placeholder="Password"
+        onChangeText={setPassword}
         secureTextEntry={true}
         style={styles.textInput}
       />
       <TouchableOpacity
+        onPress={() => CreateNewAcccount()}
         style={{
           width: "100%",
           padding: 15,
