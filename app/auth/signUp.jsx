@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Image,
   Pressable,
@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { auth, db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
+import { UserDetailContext } from "../../context/userDetailContext";
 export default function signUp() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
@@ -20,6 +21,8 @@ export default function signUp() {
   const [password, setPassword] = useState("");
 
   const CreateNewAcccount = async () => {
+    const {userDetail} =useContext(UserDetailContext)
+
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (resp) => {
         const user = resp.user;
@@ -32,12 +35,14 @@ export default function signUp() {
   };
 
   const SaveUser = async (user) => {
-    await setDoc(doc(db, "users", email), {
+    let data = {
       name: fullName,
       email: email,
       member: false,
       uid: user?.uid,
-    });
+    }
+    await setDoc(doc(db, "users", email),data);
+    setUserDetail(data)
 //navigate to new screen
 
   };
