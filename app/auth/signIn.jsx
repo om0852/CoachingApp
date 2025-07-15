@@ -23,6 +23,7 @@ export default function signIn() {
   const [loading, setLoading] = useState(false);
   const onSignIn = async () => {
       setLoading(true);
+      console.log(password)
     signInWithEmailAndPassword(auth, email, password)
       .then(async (resp) => {
         const user = resp.user;
