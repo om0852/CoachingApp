@@ -1,10 +1,25 @@
 import Colors from "@/constants/Colors";
+import { UserDetailContext } from "@/context/userDetailContext";
 import { useRouter } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useContext, useEffect } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
+import { auth, db } from "../config/firebaseConfig";
 const Index = () => {
-  const router = useRouter()
-
+  const router = useRouter();
+  const { setUserDetail } = useContext(UserDetailContext);
+  useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log(user.email);
+        const result = await getDoc(doc(db, "users", user.email));
+        console.log(result.data());
+        setUserDetail(result.data());
+        // router.replace("/(tabs)/home");
+      }
+    });
+  }, []);
   return (
     <View style={{ flex: 1, backgroundColor: Colors.WHITE }}>
       <Image
@@ -29,7 +44,7 @@ const Index = () => {
             fontSize: 35,
             textAlign: "center",
             color: Colors.WHITE,
-            fontFamily:"outfit-bold"
+            fontFamily: "outfit-bold",
           }}
         >
           Welcome to Coaching Guru
@@ -40,17 +55,36 @@ const Index = () => {
             color: Colors.WHITE,
             textAlign: "center",
             marginTop: 20,
-            fontFamily:"outfit"
+            fontFamily: "outfit",
           }}
         >
           Tranform Your Ideas into engaging eductional content effortlessly with
           us
         </Text>
-        <TouchableOpacity style={styles.button} onPress={()=>{router.push('/auth/signUp')}}>
-          <Text style={[styles.buttonText,{color:Colors.PRIMARY}]}>Get Started</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            router.push("/auth/signUp");
+          }}
+        >
+          <Text style={[styles.buttonText, { color: Colors.PRIMARY }]}>
+            Get Started
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>router.push("/auth/signIn")} style={[styles.button,{backgroundColor:Colors.PRIMARY,borderWidth:1,borderColor:Colors.WHITE}]}>
-          <Text style={[styles.buttonText,{color:Colors.WHITE}]}>Already have an Account ?</Text>
+        <TouchableOpacity
+          onPress={() => router.push("/auth/signIn")}
+          style={[
+            styles.button,
+            {
+              backgroundColor: Colors.PRIMARY,
+              borderWidth: 1,
+              borderColor: Colors.WHITE,
+            },
+          ]}
+        >
+          <Text style={[styles.buttonText, { color: Colors.WHITE }]}>
+            Already have an Account ?
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -69,6 +103,6 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: "center",
     fontSize: 18,
-    fontFamily:"outfit"
+    fontFamily: "outfit",
   },
 });

@@ -16,18 +16,17 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     outfit: require("../assets/fonts/Outfit-Regular.ttf"),
     "outfit-bold": require("../assets/fonts/Outfit-Bold.ttf"),
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-
-  if (!fontsLoaded) return null;
-const [userDetail,setUserDetail]=useState(null)
+  
+  const [userDetail,setUserDetail]=useState("")
+  // if (!fontsLoaded) return null;
   return (
     <UserDetailContext.Provider value={{userDetail,setUserDetail}}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         {/* This renders the current route */}
         <Stack screenOptions={{
           headerShown:false
-        }}></Stack>
+        }}/>
       </ThemeProvider>
     </UserDetailContext.Provider>
   );

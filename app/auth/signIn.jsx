@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useContext, useState } from "react";
 import {
+    ActivityIndicator,
     Image,
     Pressable,
     StyleSheet,
@@ -16,27 +17,32 @@ import { auth, db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
 import { UserDetailContext } from "../../context/userDetailContext";
 export default function signIn() {
-  const { userDetail,setUserDetail } = useContext(UserDetailContext);
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const onSignIn = async () => {
+      setLoading(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async (resp) => {
+        const user = resp.user;
+        // console.log(user)
+        await getUserDetail();
+        setLoading(false);
+        router.replace("/(tabs)/home")
+        ToastAndroid.show("Login Successfully", ToastAndroid.BOTTOM);
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoading(false);
+        ToastAndroid.show("Incorrect Email and Password", ToastAndroid.BOTTOM);
+      });
+  };
 
-const onSignIn=async()=>{
-signInWithEmailAndPassword(auth,email,password).then(async(resp)=>{
-    const user = resp.user;
-    // console.log(user)
-    await getUserDetail()
-    ToastAndroid.show("Login Successfully",ToastAndroid.BOTTOM)
-
-}).catch(e=>{
-    console.log(e)
-    ToastAndroid.show("Incorrect Email and Password",ToastAndroid.BOTTOM)
-});
-}
-
-const getUserDetail = async()=>{
-const result =  await getDoc(doc(db,'users',email));
-setUserDetail(result.data())
-}
+  const getUserDetail = async () => {
+    const result = await getDoc(doc(db, "users", email));
+    setUserDetail(result.data());
+  };
 
   const router = useRouter();
   return (
@@ -78,7 +84,8 @@ setUserDetail(result.data())
         style={styles.textInput}
       />
       <TouchableOpacity
-      onPress={onSignIn}
+        // disabled={loading}
+        onPress={onSignIn}
         style={{
           width: "100%",
           padding: 15,
@@ -87,16 +94,20 @@ setUserDetail(result.data())
           borderRadius: 10,
         }}
       >
-        <Text
-          style={{
-            fontFamily: "outfit",
-            fontSize: 20,
-            color: Colors.WHITE,
-            textAlign: "center",
-          }}
-        >
-          Sign In
-        </Text>
+        {!loading ? (
+          <Text
+            style={{
+              fontFamily: "outfit",
+              fontSize: 20,
+              color: Colors.WHITE,
+              textAlign: "center",
+            }}
+          >
+            Sign In
+          </Text>
+        ) : (
+          <ActivityIndicator size={"large"} color={Colors.WHITE} />
+        )}
       </TouchableOpacity>
       <View
         style={{
