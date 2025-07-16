@@ -16,7 +16,7 @@ const Index = () => {
         const result = await getDoc(doc(db, "users", user.email));
         console.log(result.data());
         setUserDetail(result.data());
-        // router.replace("/(tabs)/home");
+        router.replace("/(tabs)/home");
       }
     });
   }, []);
