@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
+import Chapters from "../../components/CourseView/Chapters";
 import Intro from "../../components/CourseView/Intro";
 import Colors from "../../constants/Colors";
 
@@ -9,14 +10,20 @@ const Index = () => {
   const course = JSON.parse(courseParams);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: Colors.WHITE,
-      }}
-    >
-      <Intro course={course} />
-    </View>
+    <FlatList
+      data={[]}
+      ListHeaderComponent={
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: Colors.WHITE,
+          }}
+        >
+          <Intro course={course} />
+          <Chapters course={course} />
+        </View>
+      }
+    />
   );
 };
 
