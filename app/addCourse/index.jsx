@@ -1,24 +1,31 @@
 import { GoogleGenAI } from "@google/genai";
-import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import { doc, setDoc } from "firebase/firestore";
+import React, { useContext, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from "react-native";
 import Button from "../../components/Shared/Button";
+import { db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
 import { default as prompt, default as Prompt } from "../../constants/Prompt";
-
+import { UserDetailContext } from "../../context/userDetailContext";
 const AddCourse = () => {
+  const router = useRouter();
   const [userPhrase, setUserPhrase] = useState("");
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [topics, setTopics] = useState([]);
+
+
+  const {userDetail,setUserDetail} = useContext(UserDetailContext)
+
   const onTopicSelect = (topic) => {
     const isAlreadyExisting = selectedTopics.find((item) => item == topic);
     console.log(isAlreadyExisting, topic);
@@ -84,7 +91,19 @@ const AddCourse = () => {
         .replace(/^```/, "") // or just ```
         .replace(/```$/, "") // remove ``` at the end
         .trim();
-        console.log(JSON.parse(cleaned))
+
+        const courses =JSON.parse(cleaned)
+        courses?.courses?.forEach(async element => {
+console.log(element)
+          await setDoc(doc(db,'Courses',Date.now().toString()),{
+            ...element,
+            createdOn:Date.now(),
+            createdBy:userDetail?.email
+
+          })
+          
+        })
+        router.push("/(tabs)/home")
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -98,7 +117,6 @@ const AddCourse = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         <Text style={styles.header}>Create New Course</Text>
         <Text style={styles.subheader}>What you want to learn today?</Text>
@@ -154,9 +172,8 @@ const AddCourse = () => {
           ) : null}
         </View>
 
-        <View style={{ height: "20vh" }}></View>
+        <View style={{ height: 50 }}></View>
       </ScrollView>
-    </SafeAreaView>
   );
 };
 
