@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Colors from "../../constants/Colors";
 import { imageAssets } from "../../constants/Option";
 
 const CourseList = ({ courseList }) => {
+  const router = useRouter();
   return (
     <View style={{ marginTop: 15 }}>
       <Text style={{ fontFamily: "outfit-bold", fontSize: 25 }}>
@@ -15,7 +17,12 @@ const CourseList = ({ courseList }) => {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <View key={index} style={styles.courseConatiner}>
+          <TouchableOpacity onPress={()=>router.push({
+            pathname:"/courseView",
+            params:{
+              courseParams:JSON.stringify(item)
+            }
+          })} key={index} style={styles.courseConatiner}>
             <Image
               source={imageAssets[item.banner_image]}
               style={{
@@ -45,7 +52,7 @@ const CourseList = ({ courseList }) => {
                 {item?.chapters?.length} Chapter
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
