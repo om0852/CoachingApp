@@ -1,9 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+    FlatList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import Colors from "../../constants/Colors";
 
 const Chapters = ({ course }) => {
+  const router = useRouter();
   return (
     <View
       style={{
@@ -21,7 +29,17 @@ const Chapters = ({ course }) => {
       <FlatList
         data={course?.chapters}
         renderItem={({ item, index }) => (
-          <View
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "chapterView",
+                params: {
+                  chapterParams: JSON.stringify(item),
+                  docId: item.id,
+                  chapterIndex: index,
+                },
+              })
+            }
             style={{
               padding: 18,
               borderWidth: 0.5,
@@ -41,10 +59,12 @@ const Chapters = ({ course }) => {
               }}
             >
               <Text style={styles.chapterText}>{index + 1}.</Text>
-              <Text style={styles.chapterText} numberOfLines={1}>{item?.chapterName}</Text>
+              <Text style={styles.chapterText} numberOfLines={1}>
+                {item?.chapterName}
+              </Text>
             </View>
             <Ionicons name="play" size={24} color={Colors.PRIMARY} />
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -57,6 +77,6 @@ const styles = StyleSheet.create({
   chapterText: {
     fontFamily: "outfit",
     fontSize: 17,
-    maxWidth:270
+    maxWidth: 270,
   },
 });

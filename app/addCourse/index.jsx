@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
 } from "react-native";
 import Button from "../../components/Shared/Button";
 import { db } from "../../config/firebaseConfig";
@@ -23,8 +23,7 @@ const AddCourse = () => {
   const [loading, setLoading] = useState(false);
   const [topics, setTopics] = useState([]);
 
-
-  const {userDetail,setUserDetail} = useContext(UserDetailContext)
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
 
   const onTopicSelect = (topic) => {
     const isAlreadyExisting = selectedTopics.find((item) => item == topic);
@@ -92,18 +91,17 @@ const AddCourse = () => {
         .replace(/```$/, "") // remove ``` at the end
         .trim();
 
-        const courses =JSON.parse(cleaned)
-        courses?.courses?.forEach(async element => {
-console.log(element)
-          await setDoc(doc(db,'Courses',Date.now().toString()),{
-            ...element,
-            createdOn:Date.now(),
-            createdBy:userDetail?.email
-
-          })
-          
-        })
-        router.push("/(tabs)/home")
+      const courses = JSON.parse(cleaned);
+      courses?.courses?.forEach(async (element) => {
+        console.log(element);
+        await setDoc(doc(db, "Courses", Date.now().toString()), {
+          ...element,
+          createdOn: Date.now(),
+          createdBy: userDetail?.email,
+          id: Date.now().toString(),
+        });
+      });
+      router.push("/(tabs)/home");
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -117,63 +115,59 @@ console.log(element)
   };
 
   return (
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        <Text style={styles.header}>Create New Course</Text>
-        <Text style={styles.subheader}>What you want to learn today?</Text>
-        <Text style={styles.description}>
-          What course you want to create (ex.Learn Python, Digital Marketing,
-          10TH Science Chapter, etc...)
-        </Text>
-        <TextInput
-          placeholder="Enter course area e.g. Python dictionaries"
-          style={styles.textInput}
-          value={userPhrase}
-          onChangeText={setUserPhrase}
-        />
-        <Button
-          text="Generate Topics"
-          type="outline"
-          onPress={onGenerateTopic}
-        />
-        <View style={styles.resultContainer}>
-          {loading && <ActivityIndicator size="large" color={Colors.PRIMARY} />}
-          {!loading && topics.length > 0 && Array.isArray(topics) ? (
-            <View style={styles.topicsWrapper}>
-              <Text style={styles.selectTopicsText}>
-                Select all topics which you want to add in the course
-              </Text>
-              {selectedTopics?.length > 0 && (
-                <Button
-                  text={"Generate Course"}
-                  onPress={() => generateCourse()}
-                />
-              )}
-              {topics.map((item, index) => (
-                <Pressable
-                  onPress={() => onTopicSelect(item)}
+    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <Text style={styles.header}>Create New Course</Text>
+      <Text style={styles.subheader}>What you want to learn today?</Text>
+      <Text style={styles.description}>
+        What course you want to create (ex.Learn Python, Digital Marketing, 10TH
+        Science Chapter, etc...)
+      </Text>
+      <TextInput
+        placeholder="Enter course area e.g. Python dictionaries"
+        style={styles.textInput}
+        value={userPhrase}
+        onChangeText={setUserPhrase}
+      />
+      <Button text="Generate Topics" type="outline" onPress={onGenerateTopic} />
+      <View style={styles.resultContainer}>
+        {loading && <ActivityIndicator size="large" color={Colors.PRIMARY} />}
+        {!loading && topics.length > 0 && Array.isArray(topics) ? (
+          <View style={styles.topicsWrapper}>
+            <Text style={styles.selectTopicsText}>
+              Select all topics which you want to add in the course
+            </Text>
+            {selectedTopics?.length > 0 && (
+              <Button
+                text={"Generate Course"}
+                onPress={() => generateCourse()}
+              />
+            )}
+            {topics.map((item, index) => (
+              <Pressable
+                onPress={() => onTopicSelect(item)}
+                style={[
+                  styles.topicItem,
+                  isSelected(item) && styles.topicItemSelected,
+                ]}
+                key={index}
+              >
+                <Text
                   style={[
-                    styles.topicItem,
-                    isSelected(item) && styles.topicItemSelected,
+                    styles.topicItemText,
+                    isSelected(item) && styles.topicItemTextSelected,
                   ]}
-                  key={index}
                 >
-                  <Text
-                    style={[
-                      styles.topicItemText,
-                      isSelected(item) && styles.topicItemTextSelected,
-                    ]}
-                  >
-                    {item}
-                    {isSelected(item) ? " ✓" : ""}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-          ) : null}
-        </View>
+                  {item}
+                  {isSelected(item) ? " ✓" : ""}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
+      </View>
 
-        <View style={{ height: 50 }}></View>
-      </ScrollView>
+      <View style={{ height: 50 }}></View>
+    </ScrollView>
   );
 };
 
