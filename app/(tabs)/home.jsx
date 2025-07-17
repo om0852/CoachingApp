@@ -1,7 +1,8 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { FlatList, Platform, StyleSheet, View } from "react-native";
 import CourseList from "../../components/Home/CourseList";
+import CourseProgress from "../../components/Home/CourseProgress";
 import Header from "../../components/Home/Header";
 import NoCourse from "../../components/Home/NoCourse";
 import PracticeSection from "../../components/Home/PracticeSection";
@@ -28,24 +29,31 @@ const Home = () => {
     });
   };
   return (
-    <View
-      style={{
-        padding: 25,
-        paddingTop: Platform.OS == "ios" && 45,
-        flex: 1,
-        backgroundColor: Colors.WHITE,
-      }}
-    >
-      <Header />
-      {courseList?.length == 0 ? (
-        <NoCourse />
-      ) : (
-        <View>
-          <PracticeSection/>
-          <CourseList courseList={courseList} />
+    <FlatList
+      data={[]}
+      ListHeaderComponent={
+        <View
+          style={{
+            padding: 25,
+
+            paddingTop: (Platform.OS == "ios" || Platform.OS == "web") && 45,
+            flex: 1,
+            backgroundColor: Colors.WHITE,
+          }}
+        >
+          <Header />
+          {courseList?.length == 0 ? (
+            <NoCourse />
+          ) : (
+            <View>
+              <CourseProgress courseList={courseList} />
+              <PracticeSection />
+              <CourseList courseList={courseList} />
+            </View>
+          )}
         </View>
-      )}
-    </View>
+      }
+    />
   );
 };
 
