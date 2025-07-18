@@ -18,7 +18,7 @@ const CourseList = ({ courseList }) => {
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={()=>router.push({
-            pathname:"/courseView",
+            pathname:`/courseView/${item.id}`,
             params:{
               courseParams:JSON.stringify(item)
             }

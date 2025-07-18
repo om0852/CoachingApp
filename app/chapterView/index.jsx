@@ -19,13 +19,13 @@ const ChapterView = () => {
   };
 
   const onChapterComplete = async () => {
-    console.log(id,chapterIndex)
+    console.log(id, chapterIndex);
     setLoading(true);
     await updateDoc(doc(db, "Courses", id), {
       completedChapter: arrayUnion(chapterIndex),
     });
     setLoading(false);
-    router.back();
+    router.replace("/courseView/" + id);
   };
   return (
     <View
@@ -88,7 +88,11 @@ const ChapterView = () => {
             onPress={() => setCurrentPage((prev) => prev + 1)}
           />
         ) : (
-          <Button text={"Finish"} onPress={() => onChapterComplete()} loading={loading} />
+          <Button
+            text={"Finish"}
+            onPress={() => onChapterComplete()}
+            loading={loading}
+          />
         )}
       </View>
     </View>
