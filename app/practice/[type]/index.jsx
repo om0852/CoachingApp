@@ -101,7 +101,7 @@ const PracticeTypeHomeScreen = () => {
           }}
         />
       )}
-      <CourseListGrid courseList={courseList} />
+      <CourseListGrid courseList={courseList} option={option}/>
     </View>
   );
 };
