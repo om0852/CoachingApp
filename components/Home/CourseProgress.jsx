@@ -1,17 +1,19 @@
 import React from "react";
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import * as Progress from 'react-native-progress';
+import * as Progress from "react-native-progress";
 import Colors from "../../constants/Colors";
 import { imageAssets } from "../../constants/Option";
 const CourseProgress = ({ courseList }) => {
-  const GetCompletedChapter = (course)=>{
+  const GetCompletedChapter = (course) => {
     const completedChapter = course?.completedChapter?.length;
-    const perc = completedChapter/course?.chapters?.length
-    return perc
-  }
+    const perc = completedChapter / course?.chapters?.length;
+    return perc;
+  };
   return (
     <View
       style={{
+        position: "relative",
+        zIndex: 5,
         marginTop: 15,
       }}
     >
@@ -19,6 +21,7 @@ const CourseProgress = ({ courseList }) => {
         style={{
           fontFamily: "outfit-bold",
           fontSize: 25,
+          color: "white",
         }}
       >
         Progress
@@ -53,12 +56,15 @@ const CourseProgress = ({ courseList }) => {
                     borderRadius: 8,
                   }}
                 />
-                <View style={{
-                    flex:1
-                }}>
+                <View
+                  style={{
+                    flex: 1,
+                  }}
+                >
                   <Text
-                  numberOfLines={2}
-                  style={{ fontFamily: "outfit-bold", fontSize: 17 }}>
+                    numberOfLines={2}
+                    style={{ fontFamily: "outfit-bold", fontSize: 17 }}
+                  >
                     {item?.courseTitle}
                   </Text>
                   <Text
@@ -71,14 +77,24 @@ const CourseProgress = ({ courseList }) => {
                   </Text>
                 </View>
               </View>
-              <View style={{
-                marginTop:10
-              }}>
-              <Progress.Bar progress={GetCompletedChapter(item)} width={250} />
-              <Text style={{
-                fontFamily:"outfit",
-                marginTop:2
-              }}>{item?.completedChapter?.length|| 0} Out of {item?.chapters?.length} Chapter Completed</Text>
+              <View
+                style={{
+                  marginTop: 10,
+                }}
+              >
+                <Progress.Bar
+                  progress={GetCompletedChapter(item)}
+                  width={250}
+                />
+                <Text
+                  style={{
+                    fontFamily: "outfit",
+                    marginTop: 2,
+                  }}
+                >
+                  {item?.completedChapter?.length || 0} Out of{" "}
+                  {item?.chapters?.length} Chapter Completed
+                </Text>
               </View>
             </View>
           );

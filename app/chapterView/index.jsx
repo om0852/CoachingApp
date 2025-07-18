@@ -28,25 +28,25 @@ const ChapterView = () => {
     router.replace("/courseView/" + id);
   };
   return (
-    <FlatList
-      data={[]}
-      ListHeaderComponent={
-        <View
-          style={{
-            padding: 25,
-            backgroundColor: Colors.WHITE,
-            flex: 1,
-
-          }}
-        >
-          <Progress.Bar
-            progress={getProgress(currentPage)}
-            width={Dimensions.get("screen").width * 0.85}
-          />
+    <View
+      style={{
+        padding: 25,
+        backgroundColor: Colors.WHITE,
+        flex: 1,
+      }}
+    >
+      <Progress.Bar
+        progress={getProgress(currentPage)}
+        width={Dimensions.get("screen").width * 0.85}
+      />
+      <FlatList
+      showsVerticalScrollIndicator={false}
+        data={[]}
+        ListHeaderComponent={
           <View
             style={{
               marginTop: 20,
-              marginBottom:20
+              paddingBottom: 100,
             }}
           >
             <Text
@@ -79,30 +79,30 @@ const ChapterView = () => {
             {/* <Text>Example:</Text> */}
             <Text>{chapters?.content[currentPage]?.example}</Text>
           </View>
-          <View
-            style={{
-              position: "absolute",
-              bottom: 15,
-              width: "100%",
-              left: 25,
-            }}
-          >
-            {chapters?.content?.length - 1 != currentPage ? (
-              <Button
-                text={"Next"}
-                onPress={() => setCurrentPage((prev) => prev + 1)}
-              />
-            ) : (
-              <Button
-                text={"Finish"}
-                onPress={() => onChapterComplete()}
-                loading={loading}
-              />
-            )}
-          </View>
-        </View>
-      }
-    />
+        }
+      />
+      <View
+        style={{
+          position: "absolute",
+          bottom: 15,
+          width: "100%",
+          left: 25,
+        }}
+      >
+        {chapters?.content?.length - 1 != currentPage ? (
+          <Button
+            text={"Next"}
+            onPress={() => setCurrentPage((prev) => prev + 1)}
+          />
+        ) : (
+          <Button
+            text={"Finish"}
+            onPress={() => onChapterComplete()}
+            loading={loading}
+          />
+        )}
+      </View>
+    </View>
   );
 };
 
