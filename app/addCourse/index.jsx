@@ -93,7 +93,7 @@ const AddCourse = () => {
 
       const courses = JSON.parse(cleaned);
       courses?.courses?.forEach(async (element) => {
-        console.log(element);
+        // console.log(element);
         await setDoc(doc(db, "Courses", Date.now().toString()), {
           ...element,
           createdOn: Date.now(),

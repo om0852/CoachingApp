@@ -1,18 +1,31 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 import Button from "../../components/Shared/Button";
+import { db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
-
 const ChapterView = () => {
-  const { chapterParams, docId, chapterIndex } = useLocalSearchParams();
+  const router = useRouter();
+  const { chapterParams, id, chapterIndex } = useLocalSearchParams();
   const chapters = JSON.parse(chapterParams);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
 
   const getProgress = (currentPage) => {
     const prec = currentPage / chapters?.content?.length;
     return prec;
+  };
+
+  const onChapterComplete = async () => {
+    console.log(id,chapterIndex)
+    setLoading(true);
+    await updateDoc(doc(db, "Courses", id), {
+      completedChapter: arrayUnion(chapterIndex),
+    });
+    setLoading(false);
+    router.back();
   };
   return (
     <View
@@ -75,15 +88,7 @@ const ChapterView = () => {
             onPress={() => setCurrentPage((prev) => prev + 1)}
           />
         ) : (
-          <Button
-            text={"Finish"}
-            onPress={() =>
-              (onChapterComplete = () => {
-                //save chapter complete
-                //then we go back
-              })
-            }
-          />
+          <Button text={"Finish"} onPress={() => onChapterComplete()} loading={loading} />
         )}
       </View>
     </View>

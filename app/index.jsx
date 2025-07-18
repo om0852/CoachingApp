@@ -12,7 +12,7 @@ const Index = () => {
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log(user.email);
+        // console.log(user.email);
         const result = await getDoc(doc(db, "users", user.email));
         console.log(result.data());
         setUserDetail(result.data());

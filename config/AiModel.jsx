@@ -3,7 +3,7 @@
 // npm install -D @types/node
 
 import {
-    GoogleGenAI,
+  GoogleGenAI,
 } from '@google/genai';
   
   async function main() {
@@ -92,7 +92,6 @@ import {
     });
     let fileIndex = 0;
     for await (const chunk of response) {
-      console.log(chunk.text);
     }
   }
   

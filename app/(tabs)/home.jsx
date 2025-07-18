@@ -24,7 +24,6 @@ const Home = () => {
     );
     const querySnapShot = await getDocs(q);
     querySnapShot.forEach((doc) => {
-      console.log(doc.data());
       setCourseList((prev) => [...prev, doc.data()]);
     });
   };

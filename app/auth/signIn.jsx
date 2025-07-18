@@ -3,15 +3,15 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useContext, useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    ToastAndroid,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { auth, db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
@@ -34,7 +34,6 @@ export default function signIn() {
         ToastAndroid.show("Login Successfully", ToastAndroid.BOTTOM);
       })
       .catch((e) => {
-        console.log(e);
         setLoading(false);
         ToastAndroid.show("Incorrect Email and Password", ToastAndroid.BOTTOM);
       });
