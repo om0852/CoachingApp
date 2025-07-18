@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 import * as Progress from "react-native-progress";
 import Button from "../../components/Shared/Button";
 import { db } from "../../config/firebaseConfig";
@@ -28,74 +28,81 @@ const ChapterView = () => {
     router.replace("/courseView/" + id);
   };
   return (
-    <View
-      style={{
-        padding: 25,
-        backgroundColor: Colors.WHITE,
-        flex: 1,
-      }}
-    >
-      <Progress.Bar
-        progress={getProgress(currentPage)}
-        width={Dimensions.get("screen").width * 0.85}
-      />
-      <View
-        style={{
-          marginTop: 20,
-        }}
-      >
-        <Text
+    <FlatList
+      data={[]}
+      ListHeaderComponent={
+        <View
           style={{
-            fontFamily: "outfit-bold",
-            fontSize: 25,
+            padding: 25,
+            backgroundColor: Colors.WHITE,
+            flex: 1,
+
           }}
         >
-          {chapters?.content[currentPage]?.topic}
-        </Text>
-        <Text
-          style={{
-            fontFamily: "outfit",
-            fontSize: 20,
-            marginTop: 7,
-          }}
-        >
-          {chapters?.content[currentPage]?.explain}
-        </Text>
-        {chapters?.content[currentPage]?.code && (
-          <Text
-            style={[
-              styles.codeExample,
-              { backgroundColor: Colors.BLACK, color: Colors.WHITE },
-            ]}
+          <Progress.Bar
+            progress={getProgress(currentPage)}
+            width={Dimensions.get("screen").width * 0.85}
+          />
+          <View
+            style={{
+              marginTop: 20,
+              marginBottom:20
+            }}
           >
-            {chapters?.content[currentPage]?.code}
-          </Text>
-        )}
-        {/* <Text>Example:</Text> */}
-        <Text>{chapters?.content[currentPage]?.example}</Text>
-      </View>
-      <View
-        style={{
-          position: "absolute",
-          bottom: 15,
-          width: "100%",
-          left: 25,
-        }}
-      >
-        {chapters?.content?.length - 1 != currentPage ? (
-          <Button
-            text={"Next"}
-            onPress={() => setCurrentPage((prev) => prev + 1)}
-          />
-        ) : (
-          <Button
-            text={"Finish"}
-            onPress={() => onChapterComplete()}
-            loading={loading}
-          />
-        )}
-      </View>
-    </View>
+            <Text
+              style={{
+                fontFamily: "outfit-bold",
+                fontSize: 25,
+              }}
+            >
+              {chapters?.content[currentPage]?.topic}
+            </Text>
+            <Text
+              style={{
+                fontFamily: "outfit",
+                fontSize: 20,
+                marginTop: 7,
+              }}
+            >
+              {chapters?.content[currentPage]?.explain}
+            </Text>
+            {chapters?.content[currentPage]?.code && (
+              <Text
+                style={[
+                  styles.codeExample,
+                  { backgroundColor: Colors.BLACK, color: Colors.WHITE },
+                ]}
+              >
+                {chapters?.content[currentPage]?.code}
+              </Text>
+            )}
+            {/* <Text>Example:</Text> */}
+            <Text>{chapters?.content[currentPage]?.example}</Text>
+          </View>
+          <View
+            style={{
+              position: "absolute",
+              bottom: 15,
+              width: "100%",
+              left: 25,
+            }}
+          >
+            {chapters?.content?.length - 1 != currentPage ? (
+              <Button
+                text={"Next"}
+                onPress={() => setCurrentPage((prev) => prev + 1)}
+              />
+            ) : (
+              <Button
+                text={"Finish"}
+                onPress={() => onChapterComplete()}
+                loading={loading}
+              />
+            )}
+          </View>
+        </View>
+      }
+    />
   );
 };
 

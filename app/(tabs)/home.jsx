@@ -13,11 +13,13 @@ import { UserDetailContext } from "../../context/userDetailContext";
 const Home = () => {
   const { userDetail } = useContext(UserDetailContext);
   const [courseList, setCourseList] = useState([]);
+  const [loading,setLoading]=useState(false)
   useEffect(() => {
     userDetail && GetCourseList();
   }, [userDetail]);
 
   const GetCourseList = async () => {
+    setLoading(true);
     const q = query(
       collection(db, "Courses"),
       where("createdBy", "==", userDetail?.email)
@@ -26,10 +28,13 @@ const Home = () => {
     querySnapShot.forEach((doc) => {
       setCourseList((prev) => [...prev, doc.data()]);
     });
+    setLoading(false)
   };
   return (
     <FlatList
       data={[]}
+      onRefresh={()=>GetCourseList()}
+      refreshing={loading}
       ListHeaderComponent={
         <View
           style={{

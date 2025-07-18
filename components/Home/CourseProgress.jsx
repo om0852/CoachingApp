@@ -4,6 +4,11 @@ import * as Progress from 'react-native-progress';
 import Colors from "../../constants/Colors";
 import { imageAssets } from "../../constants/Option";
 const CourseProgress = ({ courseList }) => {
+  const GetCompletedChapter = (course)=>{
+    const completedChapter = course?.completedChapter?.length;
+    const perc = completedChapter/course?.chapters?.length
+    return perc
+  }
   return (
     <View
       style={{
@@ -69,11 +74,11 @@ const CourseProgress = ({ courseList }) => {
               <View style={{
                 marginTop:10
               }}>
-              <Progress.Bar progress={0.3} width={250} />
+              <Progress.Bar progress={GetCompletedChapter(item)} width={250} />
               <Text style={{
                 fontFamily:"outfit",
                 marginTop:2
-              }}>3 Out of 5 Chapter Completed</Text>
+              }}>{item?.completedChapter?.length|| 0} Out of {item?.chapters?.length} Chapter Completed</Text>
               </View>
             </View>
           );
