@@ -14,11 +14,20 @@ import Colors from "../../constants/Colors";
 const CourseListGrid = ({ courseList, option }) => {
   const router = useRouter();
   const onPress = (course)=>{
+    console.log(option)
    if(option?.name=="Quiz"){
     router.push({
       pathname:"/quiz",
       params:{
         courseParams:JSON.stringify(course),
+      }
+    })
+   }
+   else if(option.name=="Flashcards"){
+    router.push({
+      pathname:"/flashcards",
+      params:{
+        courseParams:JSON.stringify(course)
       }
     })
    }
