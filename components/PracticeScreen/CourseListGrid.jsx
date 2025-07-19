@@ -31,6 +31,14 @@ const CourseListGrid = ({ courseList, option }) => {
       }
     })
    }
+   else if(option.name=="Question & Ans"){
+    router.push({
+      pathname:"/questionAnswer",
+      params:{
+        courseParams:JSON.stringify(course)
+      }
+    })
+   }
   }
   return (
     <View>
