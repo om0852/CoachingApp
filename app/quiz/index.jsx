@@ -1,21 +1,22 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import {
-    Dimensions,
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import * as Progress from "react-native-progress";
 import Button from "../../components/Shared/Button";
 import { db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
 const Quiz = () => {
+  const router = useRouter();
   const { courseParams } = useLocalSearchParams();
   const course = JSON.parse(courseParams);
   const quiz = course?.quiz;
@@ -24,7 +25,7 @@ const Quiz = () => {
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const GetProgess = (currentPage) => {
-    const perc = (currentPage+1) / quiz?.length;
+    const perc = (currentPage + 1) / quiz?.length;
     return perc;
   };
 
@@ -38,22 +39,27 @@ const Quiz = () => {
         correctAns: quiz[currentPage]?.correctAns,
       },
     }));
-    console.log(result)
   };
   const onQuizFinish = async () => {
     //save the result in database for quiz
     try {
       setLoading(true);
-    
+
       await updateDoc(doc(db, "Courses", course.id), {
         quizResult: result,
       });
       setLoading(false);
     } catch (e) {
-        console.log(e)
+      console.log(e);
       setLoading(false);
     }
     //redirect to summary page
+    router.push({
+      pathname: "/quiz/summary",
+      params:{
+        quizResultParam:JSON.stringify(result)
+      }
+    });
   };
 
   return (
@@ -162,7 +168,11 @@ const Quiz = () => {
           />
         )}
         {selectedOption?.toString() && quiz.length - 1 == currentPage && (
-          <Button loading={loading} text={"Finish"} onPress={() => onQuizFinish()} />
+          <Button
+            loading={loading}
+            text={"Finish"}
+            onPress={() => onQuizFinish()}
+          />
         )}
       </View>
     </View>
