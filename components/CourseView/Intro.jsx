@@ -1,13 +1,40 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
+import { doc, setDoc } from "firebase/firestore";
+import React, { useContext, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { db } from "../../config/firebaseConfig";
 import Colors from "../../constants/Colors";
 import { imageAssets } from "../../constants/Option";
+import { UserDetailContext } from "../../context/userDetailContext";
 import Button from "../Shared/Button";
 
-const Intro = ({ course }) => {
+const Intro = ({ course, enroll=false }) => {
+  console.log(enroll)
   const router = useRouter();
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const [loading,setLoading] =useState(false);
+
+  const onEnrollCourse = async () => {
+    const router = useRouter()
+    setLoading(true)
+    const id = Date.now().toString();
+    const data={
+      ...course,
+      createdBy: userDetail?.email,
+      createdOn:new Date(),
+      enroll:true
+    }
+    await setDoc(doc(db, "Courses", id),data);
+    router.push({
+      pathname:`/courseView/${id}`,
+      params:{
+        courseParams:JSON.stringify(data),
+        enroll:false
+      }});
+    setLoading(false)
+
+  };
   return (
     <View
       style={{
@@ -64,7 +91,11 @@ const Intro = ({ course }) => {
         >
           {course.description}
         </Text>
-        <Button text={"Start Now"} onPress={() => console.log("hi")} />
+        {enroll==true ? (
+          <Button loading={loading} text={"Enroll Now"} onPress={() => onEnrollCourse()} />
+        ) : (
+          <Button loading={loading} text={"Start Now"} onPress={() => console.log("hi")} />
+        )}
       </View>
 
       <Pressable

@@ -5,12 +5,12 @@ import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react
 import Colors from "../../constants/Colors";
 import { imageAssets } from "../../constants/Option";
 
-const CourseList = ({ courseList }) => {
+const CourseList = ({ courseList ,heading="Courses",enroll=false}) => {
   const router = useRouter();
   return (
     <View style={{ marginTop: 15 }}>
       <Text style={{ fontFamily: "outfit-bold", fontSize: 25 }}>
-        CourseList
+        {heading}
       </Text>
       <FlatList
         data={courseList}
@@ -20,7 +20,8 @@ const CourseList = ({ courseList }) => {
           <TouchableOpacity onPress={()=>router.push({
             pathname:`/courseView/${item.id}`,
             params:{
-              courseParams:JSON.stringify(item)
+              courseParams:JSON.stringify(item),
+              enroll:enroll
             }
           })} key={index} style={styles.courseConatiner}>
             <Image

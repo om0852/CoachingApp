@@ -8,7 +8,8 @@ import { db } from "../../../config/firebaseConfig";
 import Colors from "../../../constants/Colors";
 
 const Index = () => {
-  const { courseParams, courseId } = useLocalSearchParams();
+  const { courseParams, courseId,enroll } = useLocalSearchParams();
+  console.log(enroll)
   const [course, setCourse] = useState(null);
   useEffect(() => {
     if (!courseParams) {
@@ -35,7 +36,7 @@ const Index = () => {
               backgroundColor: Colors.WHITE,
             }}
           >
-            <Intro course={course} />
+            <Intro course={course} enroll={enroll} />
             <Chapters course={course} />
           </View>
         }
