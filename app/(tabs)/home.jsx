@@ -31,6 +31,10 @@ const Home = () => {
   };
   return (
     <FlatList
+      style={{
+        backgroundColor: "white",
+        flex: 1,
+      }}
       data={[]}
       onRefresh={() => GetCourseList()}
       refreshing={loading}
@@ -40,14 +44,14 @@ const Home = () => {
             style={{
               position: "absolute",
               width: "100%",
-              zIndex:1
+              zIndex: 1,
             }}
             source={require("../../assets/images/wave.png")}
           />
           <View
             style={{
               padding: 25,
-backgroundColor:"white",
+              backgroundColor: "white",
               paddingTop: (Platform.OS == "ios" || Platform.OS == "web") && 45,
             }}
           >

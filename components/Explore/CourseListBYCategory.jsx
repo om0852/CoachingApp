@@ -42,7 +42,8 @@ const CourseListBYCategory = ({ category }) => {
      >
     
 {courseList?.length>0 && <CourseList courseList={courseList} heading={category} enroll={true}/>
-}    </View>
+}   
+ </View>
   );
 };
 

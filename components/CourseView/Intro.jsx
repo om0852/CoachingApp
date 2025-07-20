@@ -23,7 +23,8 @@ const Intro = ({ course, enroll=false }) => {
       ...course,
       createdBy: userDetail?.email,
       createdOn:new Date(),
-      enroll:true
+      enroll:true,
+      id:id
     }
     await setDoc(doc(db, "Courses", id),data);
     router.push({
